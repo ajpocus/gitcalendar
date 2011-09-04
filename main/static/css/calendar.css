@@ -1,0 +1,16 @@
+.cross-out {
+    font-size: 2em;
+    position: absolute;
+    color: red;
+    opacity: 0.7;
+}
+
+.row {
+    height: 33.3%;
+    width: 100%;
+    clear: left;
+}
+
+.calendar {
+    float: left;
+}

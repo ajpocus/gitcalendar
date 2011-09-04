@@ -3,6 +3,7 @@ import json
 
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.template import RequestContext
 
 def get_data(request):
     urlbase = "https://api.github.com"
@@ -24,4 +25,8 @@ def get_data(request):
 		commit_list.append(commit['commit']['author']['date'])
 
     return HttpResponse(json.dumps(commit_list), mimetype="application/json")
+
+def view_calendar(request):
+    c = RequestContext(request)
+    return render(request, 'main/calendar.html', context_instance=c)
 
