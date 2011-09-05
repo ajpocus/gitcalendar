@@ -1,7 +1,7 @@
 # Django settings for gitcalendar project.
 import os
 
-USER = 'YOUR_USERNAME_HERE'
+USER = ''
 SITE_ROOT = os.path.dirname(__file__)
 
 DEBUG = True
