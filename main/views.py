@@ -5,9 +5,12 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.template import RequestContext
 
+from gitcalendar import settings
+
 def get_data(request):
+    user = settings.USER
     urlbase = "https://api.github.com"
-    repourl = ''.join([urlbase, "/users/ajpocus/repos"])
+    repourl = ''.join([urlbase, "/users/" + user + "/repos"])
     commit_list = []
 
     repo_req = urllib2.Request(repourl)
