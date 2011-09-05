@@ -7,44 +7,54 @@ $(function () {
     }
   }
 
-  function getCommitList () {
-    var urlbase = "https://api.github.com";
-    var user = "ajpocus";
-    var repourl = urlbase + "/users/" + user + "/repos";
-    var commiturl;
-    var repos = [];
-    var commitList = [];
-
-    // get list of user's repositories
-    $.getJSON(repourl, function getRepos (repolist) {
-      repolist.forEach(function (repo) {
-        repos.push(repo.name);
+  function markCalendars () {
+    $.getJSON("http://localhost:8000/data", function (rawCommits) {
+      var now = new Date();
+      // convert to actual Date objects for method access
+      var commitDates = rawCommits.map(function (d) {
+	return new Date(d);
       });
-    });
+      // ignore commits not of this year
+      var commitList = commitDates.filter(function (d) {
+	return d.getFullYear() === now.getFullYear();
+      });
+  
+      for (var i = 0; i < commitList.length; i++) {
+	var commit = commitList[i];
+	var month = commit.getMonth().toString(10);
+	var date = commit.getDate().toString(10);
+	var query = "#" + month + " a:contains('" + date + "')";
 
-    // for each repo, append commits to commitlist
-    repos.forEach(function (repo) {
-      commiturl = urlbase + "/repos/" + user + repo + "/commits";
-      $.getJSON(commiturl, function getCommits (commit) {
-	if (author.login === user) {
-	  commitList.push(commit.author.date);
+	var box = $(query);
+	// multiple results returned for single-digit dates
+	if (box.length > 1) {
+	  // only use the first element
+	  box = box.eq(0);
 	}
-      });
+
+/*
+	// make sure this date hasn't been marked
+	var dup = query + ":contains('x')";
+	if ($(query).length !== 0) {
+	  continue;
+	}
+*/
+	var pos = box.position();
+	var crossout = $("<span>x</span>").hide().addClass(
+	  "cross-out").css(
+	  "top", pos.top-14).css(
+	  "left", pos.left+5).show();
+	box.append(crossout);
+      }
     });
-
-    return commitList
   }
 
-  function markCalendars (commitList) {
-    var day = $("a:contains('28')");
-    var pos = day.position();
-    var crossout = $("<span>x</span>").hide().addClass(
-      "cross-out").css(
-      "top", pos.top-14).css(
-      "left", pos.left+5).show();
-    day.append(crossout);
-  }
+  (function init () {
+    generateCalendars();
+    markCalendars();
+  })();
 
+/* skip the whole init for now (incl. caching)
   (function init () {
     var commitList;
     if (Modernizr.localstorage) {
@@ -61,4 +71,5 @@ $(function () {
       $(body).append(error);
     }
   })();
+*/
 });
