@@ -18,7 +18,7 @@ $(function () {
       var commitList = commitDates.filter(function (d) {
 	return d.getFullYear() === now.getFullYear();
       });
-  
+
       for (var i = 0; i < commitList.length; i++) {
 	var commit = commitList[i];
 	var month = commit.getMonth().toString(10);
@@ -32,13 +32,12 @@ $(function () {
 	  box = box.eq(0);
 	}
 
-/*
-	// make sure this date hasn't been marked
-	var dup = query + ":contains('x')";
-	if ($(query).length !== 0) {
+	var dupQuery = query + " .cross-out";
+	var dups = $(dupQuery);
+	if (dups.length !== 0) {
 	  continue;
 	}
-*/
+
 	var pos = box.position();
 	var crossout = $("<span>x</span>").hide().addClass(
 	  "cross-out").css(
