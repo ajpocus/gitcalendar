@@ -1,7 +1,7 @@
 # Django settings for gitcalendar project.
 import os
 
-USER = ''
+USER = 'ajpocus'
 SITE_ROOT = os.path.dirname(__file__)
 
 DEBUG = True
@@ -162,4 +162,12 @@ TEMPLATE_CONTEXT_PROCESSORS = (
 
 # debug_toolbar
 INTERNAL_IPS = ('127.0.0.1',)
+
+# memcached
+CACHES = {
+    'default': {
+	'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+	'LOCATION': '127.0.0.1:11211',
+    }
+}
 

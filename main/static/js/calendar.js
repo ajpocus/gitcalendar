@@ -11,8 +11,9 @@ $(function () {
     $.getJSON("http://localhost:8000/data", function (rawCommits) {
       var now = new Date();
       // convert to actual Date objects for method access
+      // multiply by 1000 to convert to ms
       var commitDates = rawCommits.map(function (d) {
-	return new Date(d);
+	return new Date(d*1000);
       });
       // ignore commits not of this year
       var commitList = commitDates.filter(function (d) {
