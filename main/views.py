@@ -22,7 +22,6 @@ def get_data(request):
     if commit_list:
 	commit_dates = (date.fromtimestamp(ts) for ts in commit_list)
 	if today in commit_dates:
-	    commit_list = json.dumps(commit_list)
 	    reload_cache = False
 	else:
 	    reload_cache = True
