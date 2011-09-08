@@ -8,22 +8,24 @@ $(function () {
   }
 
   function markCalendars () {
-    $.getJSON("http://localhost:8000/data", function (rawCommits) {
+    $.getJSON("http://localhost:8000/data", function (commitList) {
       var now = new Date();
       // convert to actual Date objects for method access
       // multiply by 1000 to convert to ms
-      var commitDates = rawCommits.map(function (d) {
-	return new Date(d*1000);
+      commitList.forEach(function (commit) {
+	commit.timestamp = new Date(commit.timestamp*1000);
       });
+
       // ignore commits not of this year
-      var commitList = commitDates.filter(function (d) {
-	return d.getFullYear() === now.getFullYear();
+      var commitList = commitList.filter(function (d) {
+	return d.timestamp.getFullYear() === now.getFullYear();
       });
 
       for (var i = 0; i < commitList.length; i++) {
 	var commit = commitList[i];
-	var month = commit.getMonth().toString(10);
-	var date = commit.getDate().toString(10);
+	var timestamp = commit.timestamp;
+	var month = timestamp.getMonth().toString(10);
+	var date = timestamp.getDate().toString(10);
 	var query = "#" + month + " a:contains('" + date + "')";
 
 	var box = $(query);
@@ -44,6 +46,31 @@ $(function () {
 	  "cross-out").css(
 	  "top", pos.top-14).css(
 	  "left", pos.left+5).show();
+
+	(function () {
+	  var info = $("<div></div>").hide().addClass(
+	    "info").css(
+	    "top", pos.top+10).css(
+	    "left", pos.left+30);
+	  var repo = $("<span></span>").hide().append(
+	    commit.repo).addClass(
+	    "repo");
+	  var message = $("<span></span>").hide().append(
+	    commit.message).addClass(
+	    "message");
+	  crossout.hover(function () {
+	    info.append(repo);
+	    info.append(message);
+	    crossout.after(info);
+	    info.show();
+	    repo.show();
+	    message.show();
+	  }, function () {
+	    message.hide();
+	    repo.hide();
+	    info.hide();
+	  });
+	})()
 	box.append(crossout);
       }
     });
@@ -53,23 +80,4 @@ $(function () {
     generateCalendars();
     markCalendars();
   })();
-
-/* skip the whole init for now (incl. caching)
-  (function init () {
-    var commitList;
-    if (Modernizr.localstorage) {
-      generateCalendars();
-      if (localStorage["commitList"]) {
-        commitList = localStorage["commitList"];
-// TODO: check commitList for a commit made today
-      } else {
-	commitList = getCommitList();
-      }
-      markCalendars(commitList);
-    } else {
-      var error = $("<p>Sorry, you need a browser with localStorage.</p>");
-      $(body).append(error);
-    }
-  })();
-*/
 });

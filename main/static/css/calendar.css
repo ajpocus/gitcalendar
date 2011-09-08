@@ -14,3 +14,20 @@
 .calendar {
     float: left;
 }
+
+.info {
+    position: absolute;
+    width: 10%;
+    height 20%;
+    z-index: 12;
+    background-color: white;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 4px;
+    -moz-border-radius: 4px;
+    color: black;
+}
+
+.info .message, .info .repo{
+    font-size: 1em;
+}

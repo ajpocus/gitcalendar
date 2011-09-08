@@ -20,7 +20,9 @@ def get_data(request):
     today = date.today()
 
     if commit_list:
-	commit_dates = (date.fromtimestamp(ts) for ts in commit_list)
+	commit_dates = (date.fromtimestamp(commit['timestamp'])
+	    for commit in commit_list)
+
 	if today in commit_dates:
 	    reload_cache = False
 	else:
@@ -34,17 +36,26 @@ def get_data(request):
         opener = urllib2.build_opener()
         repo_f = opener.open(repo_req)
         repos = json.loads(repo_f.read())
+
         for repo in repos:
             commiturl = ''.join([urlbase, "/repos/ajpocus/", repo['name'],
 		"/commits"])
 	    commit_req = urllib2.Request(commiturl)
 	    commit_f = opener.open(commit_req)
 	    commits = json.loads(commit_f.read())
+
 	    for commit in commits:
 		if commit['author']['login'] == "ajpocus":
+		    entry = {}
 		    timestring = commit['commit']['author']['date']
-		    timestamp = time.mktime(parse_date(timestring).timetuple())
-		    commit_list.append(timestamp)
+		    entry['timestamp'] = time.mktime(
+			parse_date(timestring).timetuple())
+		    entry['repo'] = repo['name']
+		    entry['message'] = commit['commit']['message'][:50]
+		    if len(entry['message']) == 50:
+			entry['message'] += '...'
+
+		    commit_list.append(entry)
 	cache.set('commit_list', commit_list)	
 
     return HttpResponse(json.dumps(commit_list), mimetype="application/json")
