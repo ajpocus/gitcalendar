@@ -47,8 +47,7 @@ $(function () {
 	  "left", pos.left+5).show();
 
 	(function () {
-	  var infoQuery = query + ":parent > .info";
-	  var info = $(infoQuery);
+	  var info = box.parent().find('.info').eq(0);
 	  if (info.length === 0) {
 	    info = $("<div></div>").hide().addClass(
 	      "info").css(
