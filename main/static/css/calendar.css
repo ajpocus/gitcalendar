@@ -17,8 +17,6 @@
 
 .info {
     position: absolute;
-    width: 10%;
-    height 20%;
     z-index: 12;
     background-color: white;
     border-style: solid;

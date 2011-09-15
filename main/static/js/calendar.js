@@ -35,9 +35,8 @@ $(function () {
 	  box = box.eq(0);
 	}
 
-	var dupQuery = query + " .cross-out";
-	var dups = $(dupQuery);
-	if (dups.length !== 0) {
+	// avoid duplicate cross-outs
+	if (box.find('.cross-out').length !== 0) {
 	  continue;
 	}
 
@@ -48,30 +47,36 @@ $(function () {
 	  "left", pos.left+5).show();
 
 	(function () {
-	  var info = $("<div></div>").hide().addClass(
-	    "info").css(
-	    "top", pos.top+10).css(
-	    "left", pos.left+30);
+	  var infoQuery = query + ":parent > .info";
+	  var info = $(infoQuery);
+	  if (info.length === 0) {
+	    info = $("<div></div>").hide().addClass(
+	      "info").css(
+	      "top", pos.top+10).css(
+	      "left", pos.left+30);
+	  } else {
+	    info = info.eq(0);
+	  }
+
 	  var repo = $("<span></span>").hide().append(
 	    commit.repo).addClass(
 	    "repo");
 	  var message = $("<span></span>").hide().append(
 	    commit.message).addClass(
 	    "message");
+	  info.append(repo);
+	  info.append(message);
+	  
 	  crossout.hover(function () {
-	    info.append(repo);
-	    info.append(message);
-	    crossout.after(info);
 	    info.show();
-	    repo.show();
-	    message.show();
+	    info.children().show()
 	  }, function () {
-	    message.hide();
-	    repo.hide();
+	    info.children().hide()
 	    info.hide();
 	  });
-	})()
-	box.append(crossout);
+	  box.append(crossout);
+	  crossout.after(info);
+	})();
       }
     });
   }
