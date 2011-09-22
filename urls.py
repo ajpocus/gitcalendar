@@ -14,6 +14,7 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     # url(r'^admin/', include(admin.site.urls)),
-    url(r'^data', 'main.views.get_data'),
+    url(r'^repos/', 'main.views.get_repos'),
+    url(r'^commits/', 'main.views.get_commits'),
     url(r'^$', 'main.views.view_calendar'),
 )
