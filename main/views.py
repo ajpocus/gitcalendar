@@ -24,7 +24,7 @@ def get_repos(request):
 	opener = urllib2.build_opener()
 	repo_f = opener.open(repo_req)
 	repos = repo_f.read()
-	cache.set('_repos', repos, 30)
+	cache.set('_repos', repos)
 
     return HttpResponse(repos, mimetype="application/json")
 
@@ -56,7 +56,7 @@ def get_commits(request):
 		    entry['message'] += '...'
 
 		commit_list.append(entry)
-	cache.set(repo, commit_list, 30)
+	cache.set(repo, commit_list)
 
     return HttpResponse(json.dumps(commit_list), mimetype="application/json")
 

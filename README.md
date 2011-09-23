@@ -4,9 +4,11 @@ Gitcalendar pulls down your GitHub commit data, and crosses off each day you've 
 
 **REQUIREMENTS**
 
-Gitcalendar requires django-debug-toolbar, which you can install with pip:
+Gitcalendar requires django-debug-toolbar, iso8601 (for date parsing),
+memcached, and the python-memcached bindings. You can install memcached with
+your distro's package manager, and the Python dependencies with pip:
 
-    $ pip install django-debug-toolbar
+    $ pip install django-debug-toolbar iso8601 python-memcached
 
 **USAGE**
 
